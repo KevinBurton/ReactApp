@@ -37,10 +37,12 @@ function Weather() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const cityLatLngFetch = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${selectedCity}&key=AIzaSyAxrr9z3xCFQF0EnawxOCQO7pxosZ1mjAE`);
+                const locationUrl = `${process.env.REACT_APP_LOCATION_BASE_URL}?address=${selectedCity}&key=${process.env.REACT_APP_LOCATION_API_KEY}`;
+                const cityLatLngFetch = await fetch(locationUrl);
                 const cityLatLng = await cityLatLngFetch.json();
 
-                const forecastFetch = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?key=AIzaSyAxrr9z3xCFQF0EnawxOCQO7pxosZ1mjAE&location.latitude=${cityLatLng.results[0].geometry.location.lat}&location.longitude=${cityLatLng.results[0].geometry.location.lng}&days=4`);
+                const forecastUrl = `${process.env.REACT_APP_WEATHER_BASE_URL}?key=${process.env.REACT_APP_WEATHER_API_KEY}&location.latitude=${cityLatLng.results[0].geometry.location.lat}&location.longitude=${cityLatLng.results[0].geometry.location.lng}&days=4`;
+                const forecastFetch = await fetch(forecastUrl);
                 const cityWeatherData = await forecastFetch.json();
                 setWeatherData(cityWeatherData);
             } catch (err) {
